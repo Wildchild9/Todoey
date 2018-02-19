@@ -12,8 +12,23 @@ class TodoListViewController: UITableViewController {
 
     var itemArray = ["Buy Eggs", "Buy Milk", "Buy Flour"]
     
+    let defaults = UserDefaults.standard
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            
+            itemArray = items
+            
+            print("Saved Tasks:")
+            for num in 1...items.count {
+                print("\t\(num). \(items[num - 1])")
+            }
+            print("\n")
+        }
         
         
     }
@@ -26,12 +41,13 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
         cell.textLabel?.text = itemArray[indexPath.row]
+        
      //   cell.backgroundColor = UIColor.red
         return cell
     }
     
     //Mark - Tableview Delegate Methods
-    
+  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     //    print(itemArray[indexPath.row])
         
@@ -66,7 +82,11 @@ class TodoListViewController: UITableViewController {
             if let text : String = textField.text {
                 print(text)
                 self.itemArray.append(text)
+                
+                self.defaults.set(self.itemArray, forKey: "TodoListArray") // The key is used to access, retrieve, identify this data within defaults
+                
                 self.tableView.reloadData()
+                
             }
             
         }
