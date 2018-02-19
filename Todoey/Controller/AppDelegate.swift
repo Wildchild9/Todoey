@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // This is the absolute first thing that gets called (before viewDidLoad)
         
-        print("User Defaults location:\n\t\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)\n") // This is where the User Defaults are stored
+//        print("User Defaults location:\n\t\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)\n") // This is where the User Defaults are stored
         
         print("didFinishLaunchingWithOptions\n")
         

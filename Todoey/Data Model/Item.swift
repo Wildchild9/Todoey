@@ -8,36 +8,14 @@
 
 import UIKit
 
-class Item {  // Convention to name class the same as the file name
+// Convention to name class the same as the file name
+
+// Encodable means that a class can be encoded into a plist or json
+// For a class to be able to be Encodable, it must contain only standard data types, no custom class types
+
+class Item: Codable { // 'Encodable, Decodable' are both represented under 'Codable)
     
     var title : String = ""
     var done : Bool = false // Default value
     
 }
-
-//class TaskIsChecked {
-//
-//    let task : String
-//    let isChecked : Bool
-//
-//    init(title: String, done: Bool) {
-//        task = title
-//        isChecked = done
-//    }
-//}
-//
-//
-//class TodoListTaskData {
-//
-//    var list = [TaskIsChecked]()
-//
-//    init(taskTitle: String, isDone: Bool) {
-//        list.append(TaskIsChecked(title: taskTitle, done: isDone))
-//    }
-//
-//}
-    
-    
-    
-    
-

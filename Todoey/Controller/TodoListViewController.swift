@@ -14,36 +14,14 @@ class TodoListViewController: UITableViewController {
     
     let defaults = UserDefaults.standard
     
-    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem = Item() // newItem is now an object of type Item() (inheritted from the class 'Item')
-        newItem.title = "Buy Eggs"
-        itemArray.append(newItem)
+        print(dataFilePath!)
         
-        let newItem2 = Item()
-        newItem2.title = "Buy Milk"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Buy Flour"
-        itemArray.append(newItem3)
-        
-        
-        
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-
-            itemArray = items
-
-            print("Saved Tasks:")
-            for num in 1...items.count {
-                print("\t\(num). \(items[num - 1])")
-            }
-            print("\n")
-        }
-        
+        loadItems()
         
     }
     
@@ -83,9 +61,9 @@ class TodoListViewController: UITableViewController {
         
         
         
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done // It equals its opposite value
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done // It equals its opposite value (toggles value)
         
-        tableView.reloadData()
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true) // Deselects after being tapped
         
@@ -113,10 +91,12 @@ class TodoListViewController: UITableViewController {
                 newItem.title = text
                 
                 self.itemArray.append(newItem)
-                self.defaults.set(self.itemArray, forKey: "TodoListArray") // The key is used to access, retrieve, identify this data within defaults
-                self.tableView.reloadData()
+
+                self.saveItems()
                 
             }
+            
+            //                self.defaults.set(self.itemArray, forKey: "TodoListArray") // The key is used to access, retrieve, identify this data within defaults
             
         }
         
@@ -138,6 +118,35 @@ class TodoListViewController: UITableViewController {
     }
     
     
+    //Mark - Model Manipulation Methods
+    
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(self.itemArray)
+            try data.write(to: self.dataFilePath!)
+            
+        } catch {
+            print("Error encoding item array: \(error)")
+        }
+        self.tableView.reloadData()
+    }
+    
+    func loadItems() {
+        
+        if let data = try? Data(contentsOf: dataFilePath!) { // try? turns the result it produces into an optional
+            let decoder = PropertyListDecoder()
+            do {
+                try itemArray = decoder.decode([Item].self, from: data)
+                // because we are not specifying an object, in order to refer to the type that is array of items, we need to add '.self' after
+            } catch {
+                print("Error decoding item array: \(error)")
+            }
+        }
+        
+        self.tableView.reloadData()
+    }
     
     
     
