@@ -16,8 +16,10 @@ class TodoListViewController: UITableViewController {
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
            // let request : NSFetchRequest<Item> = Item.fetchRequest()
+            if let currentCategory = selectedCategory {
+                print("\nCurrent Category: \(currentCategory.name!)\n")
+            }
             
-            print("\n\(selectedCategory?.name!)\n")
             loadItems()
         }
     }
@@ -31,6 +33,7 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad()
         print("\(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)\n")
        
+        
         
     }
     
@@ -190,6 +193,8 @@ extension TodoListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
        
+        
+        
         if searchBar.text?.count == 0 {
             loadItems()
            
@@ -198,7 +203,20 @@ extension TodoListViewController: UISearchBarDelegate {
             }
             
             
+        } else { // I personally chose to put in this 'else'
+            updateSearchBar(searchBar)
         }
+    }
+    
+    func updateSearchBar(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ is sort of like a place holder for the 'text' argument
+        // [cd] means it is case and diacritic insensitive
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request, predicate: request.predicate!)
     }
     
 }
