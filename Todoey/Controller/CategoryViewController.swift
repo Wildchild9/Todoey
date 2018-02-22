@@ -13,13 +13,16 @@ class CategoryViewController: UITableViewController {
     
     let realm = try! Realm() // This is how you declare/create a new Realm
     
-    var categoryArray = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categories: Results<Category>! // The results we get back with data type of Category
+    // Data type 'Results':
+    //      Whenever you try to query your Realm database, the results you get back are in the form of a result object
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCategories()
     }
+    
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
@@ -35,7 +38,9 @@ class CategoryViewController: UITableViewController {
             
             newCategory.name = textField.text!
             
-            self.categoryArray.append(newCategory)
+//            self.categories.append(newCategory)
+            
+    // You don't need to append things to categories arrray anymore as it now autoupdates and monitors for changes
             
             self.save(category: newCategory)
                 
@@ -63,13 +68,13 @@ class CategoryViewController: UITableViewController {
     
     //MARK: - TableView Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categories.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = categoryArray[indexPath.row].name
+        cell.textLabel?.text = categories[indexPath.row].name
     
         return cell
     }
@@ -87,7 +92,7 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categories[indexPath.row]
         }
     }
     
@@ -111,15 +116,17 @@ class CategoryViewController: UITableViewController {
     
     func loadCategories() {
         
+        categories = realm.objects(Category.self)
 //        let request : NSFetchRequest<Category> = Category.fetchRequest()
 //        
 //        do {
-//            categoryArray = try context.fetch(request)
+//            categories = try context.fetch(request)
 //        } catch {
 //            print("\n* Error fetching data from context: *\n\(error)")
 //        }
-//        
-//        self.tableView.reloadData()
+//
+        
+        self.tableView.reloadData()
     }
 
 }
