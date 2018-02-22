@@ -15,6 +15,7 @@
 		C2D845EF203A093A00A5C710 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2D845ED203A093A00A5C710 /* Main.storyboard */; };
 		C2D845F1203A093A00A5C710 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2D845F0203A093A00A5C710 /* Assets.xcassets */; };
 		C2D845F4203A093A00A5C710 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2D845F2203A093A00A5C710 /* LaunchScreen.storyboard */; };
+		C2E9C435203E7A1B0074238B /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E9C434203E7A1B0074238B /* Data.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		C2D845F0203A093A00A5C710 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C2D845F3203A093A00A5C710 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C2D845F5203A093A00A5C710 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C2E9C434203E7A1B0074238B /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		E27AB28D68483A1946A417EF /* Pods-Todoey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Todoey/Pods-Todoey.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 		C2E06179203A83DF00DD1F86 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				C2E9C434203E7A1B0074238B /* Data.swift */,
 				C2799278203ABA96000318DB /* DataModel.xcdatamodeld */,
 			);
 			path = "Data Model";
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2E9C435203E7A1B0074238B /* Data.swift in Sources */,
 				C279927D203ADEE7000318DB /* CategoryViewController.swift in Sources */,
 				C279927A203ABA96000318DB /* DataModel.xcdatamodeld in Sources */,
 				C2D845EC203A093900A5C710 /* TodoListViewController.swift in Sources */,

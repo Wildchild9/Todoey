@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreData
-
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +21,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 // print("User Defaults location:\n\t\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)\n") // This is where the User Defaults are stored
         
-        print("\ndidFinishLaunchingWithOptions\n")
+    //    print("\ndidFinishLaunchingWithOptions\n")
+       
+
+        print("\nRealm file location:\n\t\(Realm.Configuration.defaultConfiguration.fileURL!.asString())\n") // File location of Realm database
+        // .asString is an extension I created located in Data.swift
+        
+        let data = Data() // Object 'data' of class 'Data'
+        data.name = "Noah"
+        data.age = 15
+
+        
+        do {
+            let realm = try Realm()
+            try realm.write {
+                realm.add(data)
+            }
+        } catch {
+            print("Error initializing new realm:\n\t\(error)")
+        }
+        
+        
+        
+        
+        
+        
+        
         
         return true
         
@@ -69,4 +94,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
 }
-

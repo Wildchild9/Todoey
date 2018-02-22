@@ -27,11 +27,11 @@ class TodoListViewController: UITableViewController {
     // Tap in to AppDelegate as an object
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    
+    // print("\(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)\n") // This is the location of Core Data database (and plist for defaults)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("\(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)\n")
+
        
         
         
