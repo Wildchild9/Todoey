@@ -25,18 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        
 
         print("\nRealm file location:\n\t\(Realm.Configuration.defaultConfiguration.fileURL!.asString())\n") // File location of Realm database
-        // .asString is an extension I created located in Data.swift
+        // .asString is an extension I created located at the bottom of AppDelegate.swift
         
-        let data = Data() // Object 'data' of class 'Data'
-        data.name = "Noah"
-        data.age = 15
 
         
         do {
             let realm = try Realm()
-            try realm.write {
-                realm.add(data)
-            }
+            
         } catch {
             print("Error initializing new realm:\n\t\(error)")
         }
@@ -93,4 +88,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+}
+
+
+
+
+extension URL {
+    func asString() -> String {
+        var urlString = "\(self)"
+        urlString.removeFirst(7)
+        return urlString
+    }
 }
