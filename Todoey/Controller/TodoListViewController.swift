@@ -16,11 +16,8 @@ class TodoListViewController: UITableViewController {
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
            // let request : NSFetchRequest<Item> = Item.fetchRequest()
-            if let currentCategory = selectedCategory {
-                print("\nCurrent Category: \(currentCategory.name!)\n")
-            }
-            
-            loadItems()
+           
+           //   loadItems()
         }
     }
     
@@ -96,17 +93,17 @@ class TodoListViewController: UITableViewController {
             
             
             
-            if let text : String = textField.text {
-                let newItem = Item(context: self.context) // This is the view context of the persistant container
-                newItem.done = false
-                newItem.title = text
-                newItem.parentCategory = self.selectedCategory
-                
-                self.itemArray.append(newItem)
+            
+//            let newItem = Item(context: self.context) // This is the view context of the persistant container
+//            newItem.done = false
+//            newItem.title = textField.text!
+//            newItem.parentCategory = self.selectedCategory
+//
+//            self.itemArray.append(newItem)
 
-                self.saveItems()
+            self.saveItems()
                 
-            }
+            
             
             //                self.defaults.set(self.itemArray, forKey: "TodoListArray") // The key is used to access, retrieve, identify this data within defaults
             
@@ -146,81 +143,94 @@ class TodoListViewController: UITableViewController {
     
     
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) { // The first world is the external parameter, while the second term is the internal parameter
-        // Item.fetchRequest() is the default value
-        
-//        let request : NSFetchRequest<Item> = Item.fetchRequest() // You need to specify data type and data type of the output (<outputDataType>)
-        
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-       
-        if let additionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-        
-        
-        do {
-            itemArray = try context.fetch(request)
-        } catch {
-           print("\n* Error fetching data from context: *\n\(error)")
-        }
-        
-         self.tableView.reloadData()
-    }
+//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) { // The first world is the external parameter, while the second term is the internal parameter
+//        // Item.fetchRequest() is the default value
+//
+////        let request : NSFetchRequest<Item> = Item.fetchRequest() // You need to specify data type and data type of the output (<outputDataType>)
+//
+//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//
+//        if let additionalPredicate = predicate {
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+//        } else {
+//            request.predicate = categoryPredicate
+//        }
+//
+//
+//        do {
+//            itemArray = try context.fetch(request)
+//        } catch {
+//           print("\n* Error fetching data from context: *\n\(error)")
+//        }
+//
+//         self.tableView.reloadData()
+//    }
+//
+   
     
-}
+    
+    
+    
+    
+} // END OF CLASS
+
+
+
+
+
+
+
 
 //Mark: - Search Bar Nethods
 
 // This is an alternative to just conforming the above class to UISearchBarDelegate within the class above
 // This is done in an effort to modularize the code
 
-extension TodoListViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ is sort of like a place holder for the 'text' argument
-        // [cd] means it is case and diacritic insensitive
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-            
-        loadItems(with: request, predicate: request.predicate!)
-        
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
-        
-        
-        if searchBar.text?.count == 0 {
-            loadItems()
-           
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
-            
-            
-        } else { // I personally chose to put in this 'else'
-            updateSearchBar(searchBar)
-        }
-    }
-    
-    func updateSearchBar(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ is sort of like a place holder for the 'text' argument
-        // [cd] means it is case and diacritic insensitive
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadItems(with: request, predicate: request.predicate!)
-    }
-    
-}
-
+//extension TodoListViewController: UISearchBarDelegate {
+//
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//
+//        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ is sort of like a place holder for the 'text' argument
+//        // [cd] means it is case and diacritic insensitive
+//
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadItems(with: request, predicate: request.predicate!)
+//
+//    }
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//
+//
+//        if searchBar.text?.count == 0 {
+//            loadItems()
+//
+//            DispatchQueue.main.async {
+//                searchBar.resignFirstResponder()
+//            }
+//
+//
+//        } else { // I personally chose to put in this 'else'
+//            updateSearchBar(searchBar)
+//        }
+//    }
+//
+//    func updateSearchBar(_ searchBar: UISearchBar) {
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//
+//        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // %@ is sort of like a place holder for the 'text' argument
+//        // [cd] means it is case and diacritic insensitive
+//
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadItems(with: request, predicate: request.predicate!)
+//    }
+//
+//}
+//
 
 
 

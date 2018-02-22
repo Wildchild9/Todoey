@@ -7,10 +7,11 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
+    let realm = try! Realm() // This is how you declare/create a new Realm
     
     var categoryArray = [Category]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -29,15 +30,16 @@ class CategoryViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             
-            if let text : String = textField.text {
-                let newCategory = Category(context: self.context)
-                newCategory.name = text
+            
+            let newCategory = Category() // Object of Category class
+            
+            newCategory.name = textField.text!
+            
+            self.categoryArray.append(newCategory)
+            
+            self.save(category: newCategory)
                 
-                self.categoryArray.append(newCategory)
-                
-                self.saveCategories()
-                
-            }
+            
             
         }
         
@@ -91,14 +93,16 @@ class CategoryViewController: UITableViewController {
     
     
     //MARK: - Data Manipulation Methods
-    func saveCategories() {
+    func save(category: Category) {
         
         
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
             
         } catch {
-            print("\n* Error saving context: *\n\(error)")
+            print("\n* Error saving category: *\n\(error)")
         }
         self.tableView.reloadData()
     }
@@ -107,15 +111,15 @@ class CategoryViewController: UITableViewController {
     
     func loadCategories() {
         
-        let request : NSFetchRequest<Category> = Category.fetchRequest()
-        
-        do {
-            categoryArray = try context.fetch(request)
-        } catch {
-            print("\n* Error fetching data from context: *\n\(error)")
-        }
-        
-        self.tableView.reloadData()
+//        let request : NSFetchRequest<Category> = Category.fetchRequest()
+//        
+//        do {
+//            categoryArray = try context.fetch(request)
+//        } catch {
+//            print("\n* Error fetching data from context: *\n\(error)")
+//        }
+//        
+//        self.tableView.reloadData()
     }
 
 }
