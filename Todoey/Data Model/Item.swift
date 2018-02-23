@@ -12,8 +12,9 @@ import RealmSwift
 class Item: Object {
     @objc dynamic var title : String = ""
     @objc dynamic var done : Bool = false // Default value of done is dalse
+    @objc dynamic var dateCreated : Date?
     
-// Inverse relationship:
+    // Inverse relationship:
     var parentCategory = LinkingObjects(fromType: Category.self, property: "items")
     // fromType : Category.self --> from Data type of Category
     // property : "items" --> name of forward relationship as a string

@@ -18,13 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // This is the absolute first thing that gets called (before viewDidLoad)
-        
-// print("User Defaults location:\n\t\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)\n") // This is where the User Defaults are stored
-        
-    //    print("\ndidFinishLaunchingWithOptions\n")
        
-
-        print("\nRealm file location:\n\t\(Realm.Configuration.defaultConfiguration.fileURL!.asString())\n") // File location of Realm database
+        
+        
+        // File location of Realm database
+        print("\nRealm file location:\n\t\(Realm.Configuration.defaultConfiguration.fileURL!.asString())\n")
         // .asString is an extension I created located at the bottom of AppDelegate.swift
         
 
