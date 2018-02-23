@@ -7,29 +7,29 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class TodoListViewController: UITableViewController {
 
-    var itemArray = [Item]()
+    var todoItems: Results<Item>?
+    let realm = try! Realm()
+    
     
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
            // let request : NSFetchRequest<Item> = Item.fetchRequest()
            
-           //   loadItems()
+              loadItems()
         }
     }
+
     
-    // Tap in to AppDelegate as an object
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-    // print("\(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)\n") // This is the location of Core Data database (and plist for defaults)
+ 
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-       
+  
         
         
     }
@@ -37,24 +37,30 @@ class TodoListViewController: UITableViewController {
     //MARK - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
+        return todoItems?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let item = itemArray[indexPath.row]
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
-        cell.textLabel?.text = item.title
         
-        // Ternary operator ==>
-        // value = condition ? valueIfTrue : valueIfFalse
+        if let item = todoItems?[indexPath.row] {
+            
+            cell.textLabel?.text = item.title
+            
+            // Ternary operator ==>
+            // value = condition ? valueIfTrue : valueIfFalse
+            
+            cell.accessoryType = item.done ? .checkmark : .none
+            
+        } else {
+            cell.textLabel?.text = "No Items Added"
+        }
         
-        cell.accessoryType = item.done ? .checkmark : .none
         // This ternary operator shortens this block of code
-        
+                // Ternary operator ==>
+                // value = condition ? conditionIfTrue : conditionIfFalse
 
-        
         return cell
     }
     
@@ -63,18 +69,24 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     //    print(itemArray[indexPath.row])
     
-        
+//        do {
+//            try realm.write {
+//                selectedCategory?.items[indexPath.row].done = !selectedCategory?.items[indexPath.row].done
+//            }
+//        } catch {
+//            print("\nError saving done property of item:\n\t\(error)\n")
+//        }
       // Delete items
 //        context.delete(itemArray[indexPath.row])
 //        itemArray.remove(at: indexPath.row)
         
         // .done = its opposite value (toggles value)
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        
-        saveItems()
-        
-        tableView.deselectRow(at: indexPath, animated: true) // Deselects after being tapped
-        
+//        todoItems[indexPath.row].done = !itemArray[indexPath.row].done
+//
+//        save()
+//
+//        tableView.deselectRow(at: indexPath, animated: true) // Deselects after being tapped
+//
     }
     
     
@@ -91,21 +103,23 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the Add Item button on our UIAlert
             
+            if textField.text != "" {
+                if let currentCategory = self.selectedCategory {
+                    do {
+                        try self.realm.write {
+                            let newItem = Item()
+                            newItem.title = textField.text!
+                            currentCategory.items.append(newItem) // This appends this item to the list of the given category and simoltaniously serves the function of saving it
+                            
+                        }
+                    } catch {
+                        print("\nError saving new item:\n\t\(error)\n")
+                    }
+                }
+                self.tableView.reloadData()
             
+            }
             
-            
-//            let newItem = Item(context: self.context) // This is the view context of the persistant container
-//            newItem.done = false
-//            newItem.title = textField.text!
-//            newItem.parentCategory = self.selectedCategory
-//
-//            self.itemArray.append(newItem)
-
-            self.saveItems()
-                
-            
-            
-            //                self.defaults.set(self.itemArray, forKey: "TodoListArray") // The key is used to access, retrieve, identify this data within defaults
             
         }
         
@@ -129,43 +143,15 @@ class TodoListViewController: UITableViewController {
     
     //Mark - Model Manipulation Methods
     
-    func saveItems() {
-        
-        
-        do {
-            try context.save()
-            
-        } catch {
-            print("\n* Error saving context: *\n\(error)")
-        }
-        self.tableView.reloadData()
+    
+    
+    func loadItems() {
+
+        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+
+         self.tableView.reloadData()
     }
-    
-    
-    
-//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) { // The first world is the external parameter, while the second term is the internal parameter
-//        // Item.fetchRequest() is the default value
-//
-////        let request : NSFetchRequest<Item> = Item.fetchRequest() // You need to specify data type and data type of the output (<outputDataType>)
-//
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        if let additionalPredicate = predicate {
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//
-//
-//        do {
-//            itemArray = try context.fetch(request)
-//        } catch {
-//           print("\n* Error fetching data from context: *\n\(error)")
-//        }
-//
-//         self.tableView.reloadData()
-//    }
-//
+
    
     
     

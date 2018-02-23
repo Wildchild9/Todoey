@@ -11,7 +11,7 @@ import RealmSwift
 
 class Item: Object {
     @objc dynamic var title : String = ""
-    @objc dynamic var done : Bool = false
+    @objc dynamic var done : Bool = false // Default value of done is dalse
     
 // Inverse relationship:
     var parentCategory = LinkingObjects(fromType: Category.self, property: "items")
