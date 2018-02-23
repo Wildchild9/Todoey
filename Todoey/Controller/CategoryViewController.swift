@@ -35,17 +35,17 @@ class CategoryViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             
-            
-            let newCategory = Category() // Object of Category class
-            
-            newCategory.name = textField.text!
-            
-//            self.categories.append(newCategory)
-            
-    // You don't need to append things to categories arrray anymore as it now autoupdates and monitors for changes
-            
-            self.save(category: newCategory)
+            if textField.text != "" {
+                let newCategory = Category() // Object of Category class
                 
+                newCategory.name = textField.text!
+                
+    //            self.categories.append(newCategory)
+                
+        // You don't need to append things to categories arrray anymore as it now autoupdates and monitors for changes
+                
+                self.save(category: newCategory)
+            }
             
             
         }
