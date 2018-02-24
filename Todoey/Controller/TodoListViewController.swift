@@ -11,6 +11,9 @@ import RealmSwift
 
 class TodoListViewController: UITableViewController {
 
+    // ↓ ↓ ↓ Results of items, this holds an array of items (of datatype Item)
+    // ↓ ↓ ↓ This in essaence allows us to read data from our Realm database
+   
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
@@ -191,6 +194,8 @@ extension TodoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        // ↑ ↑ ↑ This sorts the todoItems array itself
+        
         self.tableView.reloadData()
         
     }

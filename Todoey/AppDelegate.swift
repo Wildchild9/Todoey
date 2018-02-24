@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do {
             _ = try Realm()
+        // An underscore (_) is used since we never actually use the value aside from its initialization
             
         } catch {
             // This checks if there are any aerrors when initializing our realm
@@ -39,6 +40,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
 }
+
+
+
 
 extension URL {
     func asString() -> String {
