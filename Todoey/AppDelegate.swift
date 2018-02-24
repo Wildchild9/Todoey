@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CoreData
+
 import RealmSwift
 
 @UIApplicationMain
@@ -28,73 +28,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         do {
-            let realm = try Realm()
+            _ = try Realm()
             
         } catch {
+            // This checks if there are any aerrors when initializing our realm
             print("Error initializing new realm:\n\t\(error)")
         }
-        
-        
-        
-        
-        
-        
-        
-        
+    
         return true
         
     }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground.
-    
-        print("\napplicationWillTerminate\n")
-        
-        self.saveContext()
-    }
-    
-    
-    // MARK: - Core Data stack
-    
-    // A lazy variable on generates its value when its needed (only occupies memory when its needed)
-    
-    lazy var persistentContainer: NSPersistentContainer = {
-      
-        let container = NSPersistentContainer(name: "DataModel") // Has to match Data Model name
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-           
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
-        return container
-    }()
-    
-    // MARK: - Core Data Saving support
-    
-    // The 'context' is similar to the staging area, it is a temporary area before data is committed to permanent storage
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
-    
 }
-
-
-
 
 extension URL {
     func asString() -> String {
-        var urlString = "\(self)"
-        urlString.removeFirst(7)
-        return urlString
+        var url = "\(self)"
+        url.removeFirst(7)
+        return url
     }
 }

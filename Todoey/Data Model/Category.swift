@@ -13,11 +13,10 @@ class Category: Object {
     @objc dynamic var name : String = ""
     
 // Forward relationship:
+    
     let items = List<Item>() // This syntax specifies the type of data in the List
     
     // 'List' comes from Realm and is similar to an array
-    
-    
     
 }
 

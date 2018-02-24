@@ -24,15 +24,18 @@ class TodoListViewController: UITableViewController {
     }
 
     
- 
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-  
+        loadInfo(print: true)
+        
         
         
     }
+    
+  
+    
     
     //MARK - TableView Datasource Methods
     
@@ -115,10 +118,13 @@ class TodoListViewController: UITableViewController {
                             let newItem = Item()
                             newItem.title = textField.text!
                             newItem.dateCreated = Date()
-                            currentCategory.items.append(newItem) // This appends this item to the list of the given category and simultaneously serves the function of saving it
-                        
+                            print("*****BEFORE*****\(currentCategory.items.count)*****BEFORE*****")
+                            self.loadInfo(newInfo: newItem.title, print: true, override: true)
                             
+                            currentCategory.items.append(newItem) // This appends this item to the list of the given category and simultaneously serves the function of saving it
+                            print("*****AFTER*****\(currentCategory.items.count)*****AFTER*****")
                         }
+                        
                     } catch {
                         print("\nError saving new item:\n\t\(error)\n")
                     }
@@ -165,7 +171,41 @@ class TodoListViewController: UITableViewController {
     
     
     
+
     
+    
+    
+    func loadInfo(newInfo: String = "", print printInfo: Bool = false, override manualSwitch: Bool = false) {
+        if let currentCategory = selectedCategory {
+            if let items = todoItems, items.count > 0 || manualSwitch == true {
+                var info = ""
+                
+                info.append("\n\(currentCategory.name):\n")
+                if (items[0].title == "" || items[0].dateCreated == nil) && manualSwitch == false  {
+                    info.append("\tNo Items Added\n")
+                } else if items.count > 0 {
+                    for num in 1...items.count {
+                        info.append("\t\(num). \(items[num - 1].title)\n")
+                    }
+                    if newInfo != "" {
+                        info.append("\t\(items.count + 1). \(newInfo) (new)\n")
+                    }
+                } else {
+                    if newInfo != "" {
+                        info.append("\t\(items.count + 1). \(newInfo) (new)\n")
+                    }
+                    
+                }
+                
+                if printInfo == true {
+                    print(info)
+                }
+            } else {
+                print("\(currentCategory.name):\n\tNo Items Added\n")
+            }
+        }
+        
+    }
     
 } // END OF CLASS
 

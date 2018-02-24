@@ -22,8 +22,11 @@ class CategoryViewController: UITableViewController {
         super.viewDidLoad()
         
         loadCategories()
+        loadInfo(print: true)
         
     }
+    
+    
     
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -40,11 +43,15 @@ class CategoryViewController: UITableViewController {
                 
                 newCategory.name = textField.text!
                 
+                self.loadInfo(newInfo: newCategory.name, print: true, override: true)
+                
     //            self.categories.append(newCategory)
                 
         // You don't need to append things to categories arrray anymore as it now autoupdates and monitors for changes
                 
                 self.save(category: newCategory)
+                
+                
             }
             
             
@@ -138,10 +145,37 @@ class CategoryViewController: UITableViewController {
 //        }
 //
         
-        self.tableView.reloadData()
+       
     }
 
-}
+    
+    
+    
+    
+    
+    
+    func loadInfo(newInfo: String = "", print printInfo: Bool = false, override manualSwitch: Bool = false) {
+        if let categoryList = categories, categoryList.count > 0 || manualSwitch == true {
+            var info = ""
+            info.append("\nCategories:\n")
+            for num in 1...categoryList.count {
+                info.append("\t\(num). \(categoryList[num - 1].name)\n")
+            }
+            if newInfo != "" {
+                info.append("\t\(categoryList.count + 1). \(newInfo) (new)\n")
+            }
+            if printInfo == true {
+                print(info)
+            }
+        } else {
+            print("Categories:\n\tNo Categories Added Yet\n")
+        }
+        
+        
+    }
+    
+    
+} // END OF CLASS
 
 
 
