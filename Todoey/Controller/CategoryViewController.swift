@@ -8,9 +8,12 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
     
+    let barColour = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1)
+    let backColour = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1).darken(byPercentage: 0.3)
     let realm = try! Realm() // This is how you declare/create a new Realm
     
     var categories: Results<Category>? // The results we get back with data type of Category
@@ -22,9 +25,37 @@ class CategoryViewController: SwipeTableViewController {
         super.viewDidLoad()
         
         loadCategories()
-        
+        tableView.separatorStyle = .none
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let hexCode = barColour.hexValue()
+        updateNavBar(withCode: hexCode)
+        tableView.backgroundColor = backColour
+        
+    }
+    
+    
+    //MARK: - Nav Bar Setup Methods
+    func updateNavBar(withCode colourHexCode: String) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.") }
+        guard let navBarColour = UIColor(hexString: colourHexCode) else { fatalError() }
+        
+        let contrastColour : UIColor = ContrastColorOf(navBarColour, returnFlat: true)
+        
+        navBar.barTintColor = navBarColour
+        
+        navBar.tintColor = contrastColour
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        
+    }
+    
+    
+    
+    
     
     
     
@@ -38,12 +69,15 @@ class CategoryViewController: SwipeTableViewController {
             
             if textField.text != "" {
                 let newCategory = Category() // Object of Category class
-                
+                newCategory.colour = UIColor.randomFlat.hexValue()
                 newCategory.name = textField.text!
-                
                 self.save(category: newCategory)
+//                self.tableView.backgroundColor = UIColor(hexString: self.categories?[(self.categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.45)
+                self.tableView.backgroundColor = self.backColour
+                
                 
             }
+            
         }
         
         
@@ -85,7 +119,11 @@ class CategoryViewController: SwipeTableViewController {
         // This taps into the cell at the given row in the SwipeTableViewController class and takes on all of its properties as defined there. This allows us to choose our own text in this ViewController file
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
-
+        
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].colour ?? "FFFFFF")
+        cell.textLabel?.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+        
+//        tableView.backgroundColor = UIColor(hexString: categories?[(categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.45)
         return cell
     }
     
@@ -142,6 +180,8 @@ class CategoryViewController: SwipeTableViewController {
             }
         
             // We dont need to reloadData because the destructive swipe action in the function below already gets rid of the row
+//            self.tableView.backgroundColor = UIColor(hexString: categories?[(categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.5)
+            
         }
     }
     

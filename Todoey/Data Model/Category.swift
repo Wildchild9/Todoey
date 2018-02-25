@@ -12,6 +12,8 @@ import RealmSwift
 class Category: Object {
     @objc dynamic var name : String = ""
     // 'dynamic' allows it to look for changes in this property while the app is running
+    @objc dynamic var colour : String = ""
+    
     
 // Forward relationship:
     

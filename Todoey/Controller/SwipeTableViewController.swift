@@ -25,7 +25,8 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         // You need to make sure (inside of Main.storyboard) that both the TodoItemsViewController cells and the CategoryViewController cells have the identifier "Cells" for them to be able to use these swipe cells
         
         cell.delegate = self
-        
+        cell.textLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 19)
+
         return cell
     }
     

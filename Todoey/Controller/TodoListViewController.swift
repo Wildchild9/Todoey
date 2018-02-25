@@ -8,7 +8,7 @@
 
 import UIKit
 import RealmSwift
-
+import ChameleonFramework
 
 class TodoListViewController: SwipeTableViewController {
 
@@ -22,18 +22,57 @@ class TodoListViewController: SwipeTableViewController {
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
            // let request : NSFetchRequest<Item> = Item.fetchRequest()
-           
-              loadItems()
+            
+            loadItems()
+            tableView.separatorStyle = .none
         }
     }
 
+    @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
     }
     
-  
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    
+        guard let colourHex = selectedCategory?.colour else { fatalError() }
+        // Use guard in place of an if let statement for something that should succeed like 99% of the time and where you don't need the else statement to carry out various other tasks as you would with if let
+       
+        
+        title = selectedCategory?.name
+        
+        updateNavBar(withCode: colourHex)
+    
+        tableView.backgroundColor = UIColor(hexString: colourHex)
+    
+    
+        
+        
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let hexCode = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1).hexValue()
+        updateNavBar(withCode: hexCode)
+    }
+    
+    //MARK: - Nav Bar Setup Methods
+    func updateNavBar(withCode colourHexCode: String) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.") }
+        guard let navBarColour = UIColor(hexString: colourHexCode) else { fatalError() }
+        
+        let contrastColour : UIColor = ContrastColorOf(navBarColour, returnFlat: true)
+        
+        searchBar.barTintColor = navBarColour
+        navBar.barTintColor = navBarColour
+        
+        navBar.tintColor = contrastColour
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        
+    }
     
     
     //MARK - TableView Datasource Methods
@@ -47,6 +86,7 @@ class TodoListViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+       
         
         if let item = todoItems?[indexPath.row] {
             
@@ -55,11 +95,29 @@ class TodoListViewController: SwipeTableViewController {
             // Ternary operator ==>
             // value = condition ? valueIfTrue : valueIfFalse
             
+          
+            
             cell.accessoryType = item.done ? .checkmark : .none
+            
+            if let count = todoItems?.count {
+                let percent : CGFloat = CGFloat((0.8 / Double(count) * Double(indexPath.row + 1)))
+                cell.backgroundColor = UIColor(hexString: (selectedCategory?.colour)!)?.darken(byPercentage: percent)
+                
+                print("Cell #\(indexPath.row + 1) - Darkened by \(percent * 100)%")
+                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+                
+                cell.tintColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true) // Cell accessory colour
+                
+            }
             
         } else {
             cell.textLabel?.text = "No Items Added"
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+            
+            cell.tintColor = ContrastColorOf(tableView.backgroundColor!, returnFlat: true)
+            
         }
+        
         
         // This ternary operator shortens this block of code
                 // Ternary operator ==>
@@ -68,8 +126,7 @@ class TodoListViewController: SwipeTableViewController {
         return cell
     }
     
-    
-    
+
     
     //Mark - Tableview Delegate Methods
   
