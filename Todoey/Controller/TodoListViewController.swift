@@ -86,7 +86,7 @@ class TodoListViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-       
+        
         
         if let item = todoItems?[indexPath.row] {
             
@@ -112,11 +112,20 @@ class TodoListViewController: SwipeTableViewController {
             
         } else {
             cell.textLabel?.text = "No Items Added"
-            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
             
-            cell.tintColor = ContrastColorOf(tableView.backgroundColor!, returnFlat: true)
+            guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
             
+            cell.backgroundColor = backgroundColour
+            cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
         }
+//        if todoItems!.count < 1 {
+//            cell.textLabel?.text = "No Items Added"
+//            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+//
+//            cell.tintColor = ContrastColorOf(tableView.backgroundColor!, returnFlat: true)
+//            cell.backgroundColor = tableView.backgroundColor
+//        }
         
         
         // This ternary operator shortens this block of code
