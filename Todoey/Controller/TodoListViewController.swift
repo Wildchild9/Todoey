@@ -8,9 +8,9 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
 
-class TodoListViewController: UITableViewController {
+
+class TodoListViewController: SwipeTableViewController {
 
     // ↓ ↓ ↓ Results of items, this holds an array of items (of datatype Item)
     // ↓ ↓ ↓ This in essaence allows us to read data from our Realm database
@@ -28,14 +28,9 @@ class TodoListViewController: UITableViewController {
     }
 
     
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        
-        
     }
     
   
@@ -51,7 +46,7 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
             
@@ -160,7 +155,7 @@ class TodoListViewController: UITableViewController {
         // realm.delete(item)
     
     
-    //Mark - Model Manipulation Methods
+    //MARK: - Model Manipulation Methods
     
     func loadItems() {
 
@@ -169,7 +164,18 @@ class TodoListViewController: UITableViewController {
          self.tableView.reloadData()
     }
 
-   
+    //Mark: - Delete item
+    override func updateModel(at indexPath: IndexPath) {
+        if let itemForDeletion = self.todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(itemForDeletion)
+                }
+            } catch {
+                print("\nError deleting item:\n\t\(error)\n")
+            }
+        }
+    }
     
     
     
