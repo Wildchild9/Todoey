@@ -18,6 +18,7 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
+    
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
             // let request : NSFetchRequest<Item> = Item.fetchRequest()
@@ -174,7 +175,7 @@ class TodoListViewController: SwipeTableViewController {
     
     
     
-    //Mark - Tableview Delegate Methods
+    //MARK - Tableview Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -200,7 +201,7 @@ class TodoListViewController: SwipeTableViewController {
     
     
     
-    //Mark - Add New Items
+//MARK: - Add New Items
     
     @IBAction func addButtonPressed(_ sender: Any) {
         
@@ -232,23 +233,15 @@ class TodoListViewController: SwipeTableViewController {
                 self.tableView.reloadData()
                 
             }
-            
-            
         }
-        
         
         alert.addTextField { (alertTextField) in // You chose the name of the text field, in this case I chose alertTextField
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
             // This allows alertTextField to be used at a wider scope and lets texField actually hold the inputted values
             
-            
         }
-        
-        
         alert.addAction(action)
-        
-        
         present(alert, animated: true, completion: nil)
         
     }
@@ -267,7 +260,7 @@ class TodoListViewController: SwipeTableViewController {
         self.tableView.reloadData()
     }
     
-    //Mark: - Delete item
+    //MARK: - Delete item
     
     override func updateModel(at indexPath: IndexPath) {
         if let itemForDeletion = self.todoItems?[indexPath.row] {
@@ -299,7 +292,7 @@ class TodoListViewController: SwipeTableViewController {
 
 
 
-//Mark: - Search Bar Nethods
+//MARK: - Search Bar Nethods
 
 // This is an alternative to just conforming the above class to UISearchBarDelegate within the class above
 // This is done in an effort to modularize the code

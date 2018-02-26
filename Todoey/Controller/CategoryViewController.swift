@@ -34,6 +34,8 @@ class CategoryViewController: SwipeTableViewController {
         let hexCode = barColour.hexValue()
         updateNavBar(withCode: hexCode)
         tableView.backgroundColor = backColour
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         
     }
     
@@ -48,8 +50,8 @@ class CategoryViewController: SwipeTableViewController {
         navBar.barTintColor = navBarColour
         
         navBar.tintColor = contrastColour
-        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
-        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         
     }
     
@@ -69,33 +71,98 @@ class CategoryViewController: SwipeTableViewController {
             
             if textField.text != "" {
                 let newCategory = Category() // Object of Category class
-                newCategory.colour = UIColor.randomFlat.hexValue()
+                
+                let colour : String = self.getNewColour()
+                newCategory.colour = colour //UIColor.randomFlat.hexValue()
                 newCategory.name = textField.text!
                 self.save(category: newCategory)
 //                self.tableView.backgroundColor = UIColor(hexString: self.categories?[(self.categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.45)
                 self.tableView.backgroundColor = self.backColour
-                
-                
             }
-            
         }
-        
-        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new category"
             textField = alertTextField
-           
-            
-            
         }
         
-        
         alert.addAction(action)
-        
-        
         present(alert, animated: true, completion: nil)
         
     }
+    
+    
+    
+    
+    
+    //MARK: - Get New Colour Function
+    
+    func getNewColour() -> String {
+        var colour : String = ""
+        if let count = self.categories?.count {
+            var colourArray : [String] = [""]
+//            var iterations = 0
+            let sets = count / 48
+            let finalCount = count - (sets * 48)
+            if finalCount > 0 {
+                for num in 1...finalCount {
+    //                if count - 1) % 48 == 0 {
+    //                    colourArray = [""]
+    //
+    //                } else {
+                        guard let colourString = self.categories?[num - 1].colour else {fatalError("Could not make array of category colours")}
+                        colourArray.append(colourString)
+    //                }
+                }
+            }
+            print(tableView.numberOfRows(inSection: 0))
+            print("\n\(colourArray)")
+            print("\nWe've got \(colourArray.count - 1) colours taken already\n")
+            var newColourArray : [String] = [""]
+            var colourChecks : Int = 0
+            
+            while colourArray.contains(newColourArray.last!) {
+                
+                let newColour = UIColor.randomFlat.hexValue()
+                let containsNewColour : Bool = newColourArray.contains(newColour)
+                if containsNewColour == false {
+                    
+                    newColourArray.append(newColour)
+                    colourChecks += 1
+                   
+                }
+//                } else {
+//                    print("Duplicate colour, retry")
+//                }
+                
+                //print("\nCheck #\(colourChecks): \(newColourArray)\n")
+                
+            }
+            print("\n")
+
+//            var checks : Int = 0
+//            var duplicateArray = newColourArray
+//            duplicateArray.reverse()
+//            var startingCount = newColourArray.count
+//            for _ in 1...duplicateArray.count {
+//                let str = duplicateArray[startingCount-1]
+//                duplicateArray.remove(at: startingCount-1)
+//                startingCount -= 1
+//                if duplicateArray.contains(str) == false {
+//                    checks += 1
+//                    print("\(checks) +++")
+//                } else { print("Duplicate") }
+//            }
+            colour = newColourArray.last!
+            
+            print("New Colour - colour #\(colourArray.count) found in \(colourChecks) try --> \(colour)\n")
+            
+            return colour
+        } else {
+            colour = UIColor.randomFlat.hexValue()
+            return colour
+        }
+    }
+    
     
     
     
@@ -128,7 +195,7 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     
-    //Mark - Tableview Delegate Methods
+    //MARK: - Tableview Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
