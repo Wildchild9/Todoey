@@ -267,21 +267,14 @@ class CategoryViewController: SwipeTableViewController {
 
             do {
                 try self.realm.write {
-                    let newCategory = Category()
-                    newCategory.name = textField.text!
-                    newCategory.colour = tableView(tableView, cellForRowAt: indexPath).backgroundColor!.hexValue()
+                    let name = textField.text!
                     
-                    if changeItem == true {
                         guard let categoryForRename = self.categories?[indexPath.row] else { fatalError("Error renaming item") }
-                        self.realm.delete(categoryForRename)
-                        //self..items.replace(index: indexPath!.row, object: newItem)
-                        realm.add(newCategory)
-                        
-                        
-                    } else {
-                        realm.add(newCategory)
-                    }
-                    
+                        categoryForRename.name = name
+//                        self.realm.delete(categoryForRename)
+//
+//                        //self..items.replace(index: indexPath!.row, object: newItem)
+//                        realm.add(newCategory)
                     
                 }
                 

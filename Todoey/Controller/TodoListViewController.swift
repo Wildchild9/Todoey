@@ -303,32 +303,42 @@ class TodoListViewController: SwipeTableViewController {
             }
         }
     }
-    
+//    do {
+//    try self.realm.write {
+//    let newItem = Item()
+//    newItem.title = textField.text!
+//    newItem.dateCreated = Date()
+//    if changeItem == true {
+//    guard let itemForRename = self.todoItems?[indexPath.row] else { fatalError("Error renaming item") }
+//
+//    self.realm.delete(itemForRename)
+//    //self..items.replace(index: indexPath!.row, object: newItem)
+//
+//    currentCategory.items.append(newItem)
+//
+//    } else {
+//    currentCategory.items.append(newItem)
+//    }
+//
+//
+//    }
+//
+//    } catch {
+//    print("\nError saving new item:\n\t\(error)\n")
+//    }
     override func writeRenameToRealm(indexPath: IndexPath, textField: UITextField, changeItem: Bool) {
-        if let currentCategory = self.selectedCategory {
-            do {
-                try self.realm.write {
-                    let newItem = Item()
-                    newItem.title = textField.text!
-                    newItem.dateCreated = Date()
-                    if changeItem == true {
-                        guard let itemForRename = self.todoItems?[indexPath.row] else { fatalError("Error renaming item") }
-                        self.realm.delete(itemForRename)
-                        //self..items.replace(index: indexPath!.row, object: newItem)
-                        
-                        currentCategory.items.append(newItem)
-                        
-                    } else {
-                        currentCategory.items.append(newItem)
-                    }
-                    
-                    
-                }
+        do {
+            try self.realm.write {
+                let title = textField.text!
+                    guard let itemForRename = self.todoItems?[indexPath.row] else { fatalError("Error renaming item") }
                 
-            } catch {
-                print("\nError saving new item:\n\t\(error)\n")
+                    itemForRename.title = title
             }
+            
+        } catch {
+            print("\nError saving new item:\n\t\(error)\n")
         }
+        
     }
     
     override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
