@@ -65,8 +65,10 @@ class CategoryViewController: SwipeTableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         
-        let alert = UIAlertController(title: "Add new Todoey category", message: "", preferredStyle: .alert)
-        
+        let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (cancelAction) in
+            alert.dismiss(animated: true, completion: nil)
+        }
         let action = UIAlertAction(title: "Add Category", style: .default) { (action) in
             
             if textField.text != "" {
@@ -85,7 +87,10 @@ class CategoryViewController: SwipeTableViewController {
             textField = alertTextField
         }
         
+        
         alert.addAction(action)
+        alert.addAction(cancelAction)
+        
         present(alert, animated: true, completion: nil)
         
     }

@@ -207,9 +207,11 @@ class TodoListViewController: SwipeTableViewController {
         
         var textField = UITextField() // We use this textField as a local variable to store the inputted data from alertTextField
         
-        let alert = UIAlertController(title: "Add new Todoey item", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         
-        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (cancelAction) in
+            alert.dismiss(animated: true, completion: nil)
+        }
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the Add Item button on our UIAlert
@@ -241,7 +243,9 @@ class TodoListViewController: SwipeTableViewController {
             // This allows alertTextField to be used at a wider scope and lets texField actually hold the inputted values
             
         }
+        
         alert.addAction(action)
+        alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
         
     }
