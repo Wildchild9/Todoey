@@ -11,48 +11,48 @@ import RealmSwift
 import ChameleonFramework
 
 class TodoListViewController: SwipeTableViewController {
-
+    
     // ↓ ↓ ↓ Results of items, this holds an array of items (of datatype Item)
     // ↓ ↓ ↓ This in essaence allows us to read data from our Realm database
-   
+    
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
-    
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
-           // let request : NSFetchRequest<Item> = Item.fetchRequest()
+            // let request : NSFetchRequest<Item> = Item.fetchRequest()
             
             loadItems()
             tableView.separatorStyle = .none
         }
     }
-
+    
     @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
+        
         guard let colourHex = selectedCategory?.colour else { fatalError() }
         // Use guard in place of an if let statement for something that should succeed like 99% of the time and where you don't need the else statement to carry out various other tasks as you would with if let
-       
+        
         
         title = selectedCategory?.name
         
         updateNavBar(withCode: colourHex)
-    
+        
         tableView.backgroundColor = UIColor(hexString: colourHex)
-    
-    
-        
-        
     }
     
+    //    override func viewWillDisappear(_ animated: Bool) {
+    //        super.viewWillDisappear(animated)
+    //        let hexCode = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1).hexValue()
+    //        updateNavBar(withCode: hexCode)
+    //    }
     
     //MARK: - Nav Bar Setup Methods
     func updateNavBar(withCode colourHexCode: String) {
@@ -72,48 +72,68 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
     }
+    
     
     //MARK - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        if let itemCount = todoItems?.count {
-            if itemCount == 0 {
-                return 1
-            } else {
-                return itemCount
-            }
-        } else {
-            return 1
-        }
+        //        if let _ = todoItems?.count {
+        //            if todoItems?.count == 0 {
+        //                return 1
+        //            } else {
+        //                return todoItems?.count ?? 1
+        //            }
+        //        } else {
+        //            return 1
+        //        }
+        return todoItems?.count ?? 1
         
-        // return todoItems?.count ?? 1
+        
+        //        if let itemCount = todoItems?.count {
+        //            if itemCount == 0 {
+        //                return 1
+        //            } else {
+        //                return itemCount
+        //            }
+        //        } else {
+        //            return 1
+        //        }
+        //
+        //        // return todoItems?.count ?? 1
     }
-    
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if todoItems?.count == nil {
+        //        if todoItems?.count == nil {
+        //            cell.textLabel?.text = "No Items Added"
+        //
+        //            guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
+        //            cell.backgroundColor = backgroundColour
+        //            cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
+        //            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
+        //            cell.isUserInteractionEnabled = false
+        //
+        //        } else if todoItems?.count != 0, let item = todoItems?[indexPath.row] {
+        //            cell.isUserInteractionEnabled = true
+        if todoItems?.count == nil || todoItems?.count == 0 {
             cell.textLabel?.text = "No Items Added"
-            
+            //     cell.isUserInteractionEnabled = false
             guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
             cell.backgroundColor = backgroundColour
             cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
             cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
-            cell.isUserInteractionEnabled = false
+        } else if let item = todoItems?[indexPath.row] {
             
-        } else if todoItems?.count != 0, let item = todoItems?[indexPath.row] {
-            cell.isUserInteractionEnabled = true
             cell.textLabel?.text = item.title
             
             // Ternary operator ==>
             // value = condition ? valueIfTrue : valueIfFalse
             
-          
+            
             
             cell.accessoryType = item.done ? .checkmark : .none
             
@@ -127,42 +147,37 @@ class TodoListViewController: SwipeTableViewController {
                 cell.tintColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true) // Cell accessory colour
                 
             }
-            
-        } else {
-            cell.textLabel?.text = "No Items Added"
-            cell.isUserInteractionEnabled = false
-            guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
-            cell.backgroundColor = backgroundColour
-            cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
-            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
         }
+        
         
         // Maybe alter the if else statements to check if todoItems is empty
         
-        print("Row #\(indexPath.row)")
+        //       print("Row #\(indexPath.row)")
         
-//        if todoItems!.count < 1 {
-//            cell.textLabel?.text = "No Items Added"
-//            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
-//
-//            cell.tintColor = ContrastColorOf(tableView.backgroundColor!, returnFlat: true)
-//            cell.backgroundColor = tableView.backgroundColor
-//        }
+        
+        
+        //        if todoItems!.count < 1 {
+        //            cell.textLabel?.text = "No Items Added"
+        //            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+        //
+        //            cell.tintColor = ContrastColorOf(tableView.backgroundColor!, returnFlat: true)
+        //            cell.backgroundColor = tableView.backgroundColor
+        //        }
         
         
         // This ternary operator shortens this block of code
-                // Ternary operator ==>
-                // value = condition ? conditionIfTrue : conditionIfFalse
-
+        // Ternary operator ==>
+        // value = condition ? conditionIfTrue : conditionIfFalse
+        
         return cell
     }
     
-
+    
     
     //Mark - Tableview Delegate Methods
-  
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-  
+        
         
         if let item = todoItems?[indexPath.row] {
             do {
@@ -178,7 +193,7 @@ class TodoListViewController: SwipeTableViewController {
         self.tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true) // Deselects after being tapped
-
+        
     }
     
     
@@ -194,7 +209,7 @@ class TodoListViewController: SwipeTableViewController {
         let alert = UIAlertController(title: "Add new Todoey item", message: "", preferredStyle: .alert)
         
         
-       
+        
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What will happen once the user clicks the Add Item button on our UIAlert
             
@@ -205,9 +220,9 @@ class TodoListViewController: SwipeTableViewController {
                             let newItem = Item()
                             newItem.title = textField.text!
                             newItem.dateCreated = Date()
-                           
+                            
                             currentCategory.items.append(newItem) // This appends this item to the list of the given category and simultaneously serves the function of saving it
-
+                            
                         }
                         
                     } catch {
@@ -215,7 +230,7 @@ class TodoListViewController: SwipeTableViewController {
                     }
                 }
                 self.tableView.reloadData()
-            
+                
             }
             
             
@@ -240,38 +255,39 @@ class TodoListViewController: SwipeTableViewController {
     
     
     // Delete item in Realm Database:
-        // realm.delete(item)
+    // realm.delete(item)
     
     
     //MARK: - Model Manipulation Methods
     
     func loadItems() {
-
+        
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-
-         self.tableView.reloadData()
+        
+        self.tableView.reloadData()
     }
-
+    
     //Mark: - Delete item
+    
     override func updateModel(at indexPath: IndexPath) {
         if let itemForDeletion = self.todoItems?[indexPath.row] {
-            print("\n\n HEY, WE MADE IT!\n\n")
             do {
                 try self.realm.write {
+                    
                     self.realm.delete(itemForDeletion)
                     
+                    print("Deleted item from Realm database\n")
+                    
                 }
-                
             } catch {
                 print("\nError deleting item:\n\t\(error)\n")
             }
-            
         }
     }
     
     
     
-
+    
     
 } // END OF CLASS
 
@@ -289,7 +305,7 @@ class TodoListViewController: SwipeTableViewController {
 // This is done in an effort to modularize the code
 
 extension TodoListViewController: UISearchBarDelegate {
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
@@ -298,21 +314,21 @@ extension TodoListViewController: UISearchBarDelegate {
         self.tableView.reloadData()
         
     }
-        
+    
     
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
         
-
+        
+        
         if searchBar.text?.count == 0 {
             loadItems()
-
+            
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-
-
+            
+            
         } else {
             todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
             self.tableView.reloadData()
