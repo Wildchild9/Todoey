@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("\nRealm file location:\n\t\(Realm.Configuration.defaultConfiguration.fileURL!.asString())\n")
         // .asString is an extension I created located at the bottom of AppDelegate.swift
         
-
+        UIApplication.shared.statusBarStyle = .lightContent
         
         do {
             _ = try Realm()

@@ -49,6 +49,7 @@ class TodoListViewController: SwipeTableViewController {
         updateNavBar(withCode: colourHex)
         
         tableView.backgroundColor = UIColor(hexString: colourHex)
+        
     }
     
     //    override func viewWillDisappear(_ animated: Bool) {
@@ -68,14 +69,22 @@ class TodoListViewController: SwipeTableViewController {
         navBar.barTintColor = navBarColour
         
         navBar.tintColor = contrastColour
+        
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
         navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : contrastColour]
+        
+        if navBar.tintColor.hexValue() == "#262626" {
+            UIApplication.shared.statusBarStyle = .default
+        } else {
+            UIApplication.shared.statusBarStyle = .lightContent
+        }
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        UIApplication.shared.statusBarStyle = .lightContent
+        updateNavBar(withCode: mainColour.hexValue())
     }
     
     
@@ -91,7 +100,11 @@ class TodoListViewController: SwipeTableViewController {
         //        } else {
         //            return 1
         //        }
+//        if todoItems?.count == 0 {
+//            return 1
+//        } else {
         return todoItems?.count ?? 1
+//    }
         
         
         //        if let itemCount = todoItems?.count {
@@ -122,7 +135,11 @@ class TodoListViewController: SwipeTableViewController {
         //
         //        } else if todoItems?.count != 0, let item = todoItems?[indexPath.row] {
         //            cell.isUserInteractionEnabled = true
+      
+
+        
         if todoItems?.count == nil || todoItems?.count == 0 {
+        //    cell.isUserInteractionEnabled = true
             cell.textLabel?.text = "No Items Added"
             //     cell.isUserInteractionEnabled = false
             guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
@@ -130,7 +147,8 @@ class TodoListViewController: SwipeTableViewController {
             cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
             cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
         } else if let item = todoItems?[indexPath.row] {
-            
+           // cell.isUserInteractionEnabled == false
+            print("\ntodoItems!.count --> \(todoItems!.count)\n")
             cell.textLabel?.text = item.title
             
             // Ternary operator ==>
@@ -140,17 +158,28 @@ class TodoListViewController: SwipeTableViewController {
             
             cell.accessoryType = item.done ? .checkmark : .none
             
-            if let count = todoItems?.count {
-                let percent : CGFloat = CGFloat((0.8 / Double(count) * Double(indexPath.row + 1)))
-                cell.backgroundColor = UIColor(hexString: (selectedCategory?.colour)!)?.darken(byPercentage: percent)
-                
-                print("Cell #\(indexPath.row + 1) - Darkened by \(percent * 100)%")
-                cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
-                
-                cell.tintColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true) // Cell accessory colour
-                
-            }
+            guard let count = todoItems?.count else { fatalError("Error counting todoItems array when loading cell properties") }
+            let percent : CGFloat = CGFloat((0.8 / Double(count) * Double(indexPath.row + 1)))
+            cell.backgroundColor = UIColor(hexString: (selectedCategory?.colour)!)?.darken(byPercentage: percent)
+            
+            print("Cell #\(indexPath.row + 1) - Darkened by \(percent * 100)%")
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+            
+            cell.tintColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true) // Cell accessory colour
+            
         }
+        
+        //TODO: - Set UIStatusBar Style
+        
+        
+//        if UIColor(contrastingBlackOrWhiteColorOn: (navigationController?.navigationBar.barTintColor)!, isFlat: true) == UIColor.black {
+//
+//            UIApplication.shared.statusBarStyle = .default
+//        } else {
+//            UIApplication.shared.statusBarStyle = .lightContent
+//        }
+        
+        
         
         
         // Maybe alter the if else statements to check if todoItems is empty
@@ -174,7 +203,6 @@ class TodoListViewController: SwipeTableViewController {
         
         return cell
     }
-    
     
     
     //MARK - Tableview Delegate Methods
@@ -233,17 +261,7 @@ class TodoListViewController: SwipeTableViewController {
                             let newItem = Item()
                             newItem.title = textField.text!
                             newItem.dateCreated = Date()
-                            if changeItem == true {
-                                guard let itemForRename = self.todoItems?[indexPath!.row] else { fatalError("Error renaming item") }
-                                self.realm.delete(itemForRename)
-                                    //self..items.replace(index: indexPath!.row, object: newItem)
-                                
-                                currentCategory.items.append(newItem)
-                                
-                            } else {
-                                currentCategory.items.append(newItem)
-                            }
-                            
+                            currentCategory.items.append(newItem)
                             
                         }
                         
@@ -391,6 +409,7 @@ class TodoListViewController: SwipeTableViewController {
             
             self.tableView.reloadData()
         }
+        
         checkAction.backgroundColor = mainColour
         checkAction.image = UIImage(named: "check-icon1-white-small")
         

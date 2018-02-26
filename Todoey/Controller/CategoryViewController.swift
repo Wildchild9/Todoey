@@ -20,10 +20,14 @@ class CategoryViewController: SwipeTableViewController {
     // Data type 'Results':
     //      Whenever you try to query your Realm database, the results you get back are in the form of a result object
         
-    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
+        //return UIStatusBarStyle.default   // Make dark again
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        UIApplication.shared.statusBarStyle = .lightContent
         loadCategories()
         tableView.separatorStyle = .none
         
@@ -52,7 +56,7 @@ class CategoryViewController: SwipeTableViewController {
         navBar.tintColor = contrastColour
         navBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
-        
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     
@@ -197,6 +201,7 @@ class CategoryViewController: SwipeTableViewController {
         cell.textLabel?.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
         
 //        tableView.backgroundColor = UIColor(hexString: categories?[(categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.45)
+        
         return cell
     }
     
@@ -260,7 +265,6 @@ class CategoryViewController: SwipeTableViewController {
     override func alertTitleName() -> String {
         return "Rename Category"
     }
-    
     
     
     override func writeRenameToRealm(indexPath: IndexPath, textField: UITextField, changeItem: Bool) {
