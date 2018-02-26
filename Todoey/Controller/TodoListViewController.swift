@@ -52,11 +52,7 @@ class TodoListViewController: SwipeTableViewController {
         
         
     }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        let hexCode = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1).hexValue()
-        updateNavBar(withCode: hexCode)
-    }
+    
     
     //MARK: - Nav Bar Setup Methods
     func updateNavBar(withCode colourHexCode: String) {
@@ -74,11 +70,26 @@ class TodoListViewController: SwipeTableViewController {
         
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+    }
     
     //MARK - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todoItems?.count ?? 1
+
+        if let itemCount = todoItems?.count {
+            if itemCount == 0 {
+                return 1
+            } else {
+                return itemCount
+            }
+        } else {
+            return 1
+        }
+        
+        // return todoItems?.count ?? 1
     }
     
     
@@ -86,10 +97,17 @@ class TodoListViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        
-        
-        if let item = todoItems?[indexPath.row] {
+        if todoItems?.count == nil {
+            cell.textLabel?.text = "No Items Added"
             
+            guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
+            cell.backgroundColor = backgroundColour
+            cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
+            cell.isUserInteractionEnabled = false
+            
+        } else if todoItems?.count != 0, let item = todoItems?[indexPath.row] {
+            cell.isUserInteractionEnabled = true
             cell.textLabel?.text = item.title
             
             // Ternary operator ==>
@@ -112,13 +130,17 @@ class TodoListViewController: SwipeTableViewController {
             
         } else {
             cell.textLabel?.text = "No Items Added"
-            
+            cell.isUserInteractionEnabled = false
             guard let backgroundColour = tableView.backgroundColor else { fatalError("Could not get tableView background colour")}
-            
             cell.backgroundColor = backgroundColour
             cell.tintColor = ContrastColorOf(backgroundColour, returnFlat: true)
             cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: backgroundColour, isFlat: true)
         }
+        
+        // Maybe alter the if else statements to check if todoItems is empty
+        
+        print("Row #\(indexPath.row)")
+        
 //        if todoItems!.count < 1 {
 //            cell.textLabel?.text = "No Items Added"
 //            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
