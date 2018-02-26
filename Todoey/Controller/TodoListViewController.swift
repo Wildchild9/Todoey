@@ -19,6 +19,7 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
+    let mainColour = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1)
     
     var selectedCategory : Category? {
         didSet { // didSet is called upon selected category being set with a value
@@ -341,6 +342,14 @@ class TodoListViewController: SwipeTableViewController {
         
     }
     
+    
+    
+    
+    
+    
+    
+    //MARK: - Swipe Button Methods
+    
     override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
         if orientation == .right {
             var options = SwipeTableOptions()
@@ -348,12 +357,49 @@ class TodoListViewController: SwipeTableViewController {
             return options
         } else {
             var options = SwipeTableOptions()
-            // options.expansionStyle = .selection
+            options.expansionStyle = .selection
             options.transitionStyle = .border
             return options
         }
         
     }
+    
+    override func alertTitleName() -> String {
+        return "Rename Item"
+    }
+    
+    override func leftSwipeAction(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        let renameAction = SwipeAction(style: .default, title: "Rename") { (action, indexPath) in
+            //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
+            self.renameAlert(alertButton: "Rename", changeItem: true, indexPath: indexPath)
+        }
+        renameAction.backgroundColor = #colorLiteral(red: 1, green: 0.8319068551, blue: 0, alpha: 1)
+        renameAction.image = UIImage(named: "rename-icon1-white-small")
+        
+        let checkAction = SwipeAction(style: .default, title: nil) { (action, indexPath) in
+            //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
+            if let item = self.todoItems?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        item.done = !item.done
+                    }
+                } catch {
+                    print("\nError saving done status:\n\t\(error)\n")
+                }
+                
+            }
+            
+            self.tableView.reloadData()
+        }
+        checkAction.backgroundColor = mainColour
+        checkAction.image = UIImage(named: "check-icon1-white-small")
+        
+        return [checkAction, renameAction]
+    }
+    
+    
+    
+    
     
 } // END OF CLASS
 

@@ -53,17 +53,21 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
             deleteAction.image = UIImage(named: "delete-icon")
             return [deleteAction]
         } else {
-            let renameAction = SwipeAction(style: .default, title: "Rename") { (action, indexPath) in
-                //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
-                self.renameAlert(alertButton: "Rename", changeItem: true, indexPath: indexPath)
-            }
-            renameAction.backgroundColor = #colorLiteral(red: 1, green: 0.8319068551, blue: 0, alpha: 1)
-            renameAction.image = UIImage(named: "rename-icon1-white-small")
-
-            
-            return [renameAction]
+            return leftSwipeAction(tableView, editActionsForRowAt: indexPath, for: orientation)
         }
         
+    }
+    
+    func leftSwipeAction(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        let renameAction = SwipeAction(style: .default, title: "Rename") { (action, indexPath) in
+            //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
+            self.renameAlert(alertButton: "Rename", changeItem: true, indexPath: indexPath)
+        }
+        renameAction.backgroundColor = #colorLiteral(red: 1, green: 0.8319068551, blue: 0, alpha: 1)
+        renameAction.image = UIImage(named: "rename-icon1-white-small")
+        
+        
+        return [renameAction]
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
