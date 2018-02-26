@@ -119,6 +119,7 @@ class CategoryViewController: SwipeTableViewController {
     //                }
                 }
             }
+            
             print(tableView.numberOfRows(inSection: 0))
             print("\n\(colourArray)")
             print("\nWe've got \(colourArray.count - 1) colours taken already\n")
@@ -256,6 +257,39 @@ class CategoryViewController: SwipeTableViewController {
             
         }
     }
+    override func alertTitleName() -> String {
+        return "Rename Category"
+    }
+    
+    
+    
+    override func writeRenameToRealm(indexPath: IndexPath, textField: UITextField, changeItem: Bool) {
+
+            do {
+                try self.realm.write {
+                    let newCategory = Category()
+                    newCategory.name = textField.text!
+                    newCategory.colour = tableView(tableView, cellForRowAt: indexPath).backgroundColor!.hexValue()
+                    
+                    if changeItem == true {
+                        guard let categoryForRename = self.categories?[indexPath.row] else { fatalError("Error renaming item") }
+                        self.realm.delete(categoryForRename)
+                        //self..items.replace(index: indexPath!.row, object: newItem)
+                        realm.add(newCategory)
+                        
+                        
+                    } else {
+                        realm.add(newCategory)
+                    }
+                    
+                    
+                }
+                
+            } catch {
+                print("\nError saving new item:\n\t\(error)\n")
+            }
+    }
+    
     
     
     

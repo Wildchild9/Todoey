@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import ChameleonFramework
+import SwipeCellKit
 
 class TodoListViewController: SwipeTableViewController {
     
@@ -205,15 +206,23 @@ class TodoListViewController: SwipeTableViewController {
     
     @IBAction func addButtonPressed(_ sender: Any) {
         
+        addAlert()
+        
+    }
+    
+    
+    //MARK: - Add Alert Funciton
+    
+    func addAlert(alertTitle: String = "Add New Item", alertButton: String = "Add Item", changeItem: Bool = false, indexPath: IndexPath? = nil) {
         var textField = UITextField() // We use this textField as a local variable to store the inputted data from alertTextField
         
-        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (cancelAction) in
             alert.dismiss(animated: true, completion: nil)
         }
         
-        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+        let action = UIAlertAction(title: alertButton, style: .default) { (action) in
             // What will happen once the user clicks the Add Item button on our UIAlert
             
             if textField.text != "" {
@@ -223,8 +232,17 @@ class TodoListViewController: SwipeTableViewController {
                             let newItem = Item()
                             newItem.title = textField.text!
                             newItem.dateCreated = Date()
+                            if changeItem == true {
+                                guard let itemForRename = self.todoItems?[indexPath!.row] else { fatalError("Error renaming item") }
+                                self.realm.delete(itemForRename)
+                                    //self..items.replace(index: indexPath!.row, object: newItem)
+                                
+                                currentCategory.items.append(newItem)
+                                
+                            } else {
+                                currentCategory.items.append(newItem)
+                            }
                             
-                            currentCategory.items.append(newItem) // This appends this item to the list of the given category and simultaneously serves the function of saving it
                             
                         }
                         
@@ -248,7 +266,11 @@ class TodoListViewController: SwipeTableViewController {
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
         
+    
     }
+    
+    
+    
     
     
     // Delete item in Realm Database:
@@ -282,9 +304,46 @@ class TodoListViewController: SwipeTableViewController {
         }
     }
     
+    override func writeRenameToRealm(indexPath: IndexPath, textField: UITextField, changeItem: Bool) {
+        if let currentCategory = self.selectedCategory {
+            do {
+                try self.realm.write {
+                    let newItem = Item()
+                    newItem.title = textField.text!
+                    newItem.dateCreated = Date()
+                    if changeItem == true {
+                        guard let itemForRename = self.todoItems?[indexPath.row] else { fatalError("Error renaming item") }
+                        self.realm.delete(itemForRename)
+                        //self..items.replace(index: indexPath!.row, object: newItem)
+                        
+                        currentCategory.items.append(newItem)
+                        
+                    } else {
+                        currentCategory.items.append(newItem)
+                    }
+                    
+                    
+                }
+                
+            } catch {
+                print("\nError saving new item:\n\t\(error)\n")
+            }
+        }
+    }
     
-    
-    
+    override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
+        if orientation == .right {
+            var options = SwipeTableOptions()
+            options.expansionStyle = .destructive
+            return options
+        } else {
+            var options = SwipeTableOptions()
+            // options.expansionStyle = .selection
+            options.transitionStyle = .border
+            return options
+        }
+        
+    }
     
 } // END OF CLASS
 
@@ -332,4 +391,5 @@ extension TodoListViewController: UISearchBarDelegate {
         }
     }
 }
+
 
