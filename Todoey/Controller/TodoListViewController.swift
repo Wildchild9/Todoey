@@ -255,13 +255,17 @@ class TodoListViewController: SwipeTableViewController {
     //Mark: - Delete item
     override func updateModel(at indexPath: IndexPath) {
         if let itemForDeletion = self.todoItems?[indexPath.row] {
+            print("\n\n HEY, WE MADE IT!\n\n")
             do {
                 try self.realm.write {
                     self.realm.delete(itemForDeletion)
+                    
                 }
+                
             } catch {
                 print("\nError deleting item:\n\t\(error)\n")
             }
+            
         }
     }
     
