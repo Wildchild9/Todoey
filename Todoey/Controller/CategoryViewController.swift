@@ -139,21 +139,32 @@ class CategoryViewController: SwipeTableViewController {
         */
 
 //        initialSetNumberOfRows()
+        
         return NumberOfRows.rows.count
+        
 //        return categories?.count ?? 1 // This is an example of a Nil Coalescing Operateor
         
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        print("\nWhy isn't this working?!\n")
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        // This taps into the cell at the given row in the SwipeTableViewController class and takes on all of its properties as defined there. This allows us to choose our own text in this ViewController file
         
+        // This taps into the cell at the given row in the SwipeTableViewController class and takes on all of its properties as defined there. This allows us to choose our own text in this ViewController file
+//        guard let text = categories?[indexPath.row].name else { fatalError("\nError, could not low cell text in cellForRowAtIndexPath\n") }
+        
+     //   print("\nName --> \(cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet")\n")
+
+        
+
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
         
+        // Fatal error occurs in setting the text of the cell
+        print("\nGot cell name\n")
+
         cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].colour ?? "FFFFFF")
-        cell.textLabel?.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true)
+        cell.textLabel?.textColor = UIColor.init(contrastingBlackOrWhiteColorOn: cell.backgroundColor!, isFlat: true) // DO NOT CHANGE .init
         
 //        tableView.backgroundColor = UIColor(hexString: categories?[(categories?.count)! - 1].colour ?? "FFFFFF")?.darken(byPercentage: 0.45)
         
