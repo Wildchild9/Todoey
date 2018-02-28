@@ -80,6 +80,7 @@ class TodoListViewController: SwipeTableViewController {
         }
         
     }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -415,6 +416,11 @@ class TodoListViewController: SwipeTableViewController {
         
         return [checkAction, renameAction]
     }
+    
+    
+    
+    
+    
     
     
     

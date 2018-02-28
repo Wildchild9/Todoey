@@ -131,4 +131,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     
     
+    
+    
 } // END OF CLASS
