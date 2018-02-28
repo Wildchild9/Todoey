@@ -230,68 +230,12 @@ class CategoryViewController: SwipeTableViewController {
     
     
     
-    
-//MARK: - Deletion Confirmation
-    
-    
-//    override func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeTableOptions {
-//        if orientation == .right {
-//            var options = SwipeTableOptions()
-//            options.expansionStyle = .destructive
-//            return options
-//        } else {
-//            var options = SwipeTableOptions()
-//            options.expansionStyle = .selection
-//            options.transitionStyle = .border
-//            return options
-//        }
-//
-//    }
-//
-//    override func alertTitleName() -> String {
-//        return "Rename Item"
-//    }
-//
-//    override func leftSwipeAction(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-//        let renameAction = SwipeAction(style: .default, title: "Rename") { (action, indexPath) in
-//            //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
-//            self.renameAlert(alertButton: "Rename", changeItem: true, indexPath: indexPath)
-//        }
-//        renameAction.backgroundColor = #colorLiteral(red: 1, green: 0.8319068551, blue: 0, alpha: 1)
-//        renameAction.image = UIImage(named: "rename-icon1-white-small")
-//
-//        let checkAction = SwipeAction(style: .default, title: nil) { (action, indexPath) in
-//            //                self.addAlert(alertTitle: "Rename Item", alertButton: "Rename")
-//            if let item = self.todoItems?[indexPath.row] {
-//                do {
-//                    try self.realm.write {
-//                        item.done = !item.done
-//                    }
-//                } catch {
-//                    print("\nError saving done status:\n\t\(error)\n")
-//                }
-//
-//            }
-//
-//            self.tableView.reloadData()
-//        }
-//
-//        checkAction.backgroundColor = mainColour
-//        checkAction.image = UIImage(named: "check-icon1-white-small")
-//
-//        return [checkAction, renameAction]
-//    }
-    
-    
-    
 //MARK: - Delete Confirmation
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         
         guard let categoryName : String = categories?[indexPath.row].name else {
             fatalError ("Error getting category name in swipe cell delegate methods")
         }
-        
-        //   let initialIndexPath : IndexPath = indexPath
         
         if orientation == .right {
          
@@ -315,8 +259,8 @@ class CategoryViewController: SwipeTableViewController {
                         
                         //                    tableView.deleteRows(at: [indexPath], with: .automatic)
                     } else {
-                        self.tableView.reloadData()
                         action.fulfill(with: .reset)
+                        // self.tableView.reloadData() // with this uncommented, the cell does not slide back into the tableView
                     }
                 }
                 
@@ -351,7 +295,15 @@ class CategoryViewController: SwipeTableViewController {
 
     func confirmation(withName categoryName: String, completion: @escaping (Bool) -> Void) {
         
-        let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete your \"\(categoryName)\" category?", preferredStyle: .actionSheet)
+//        let confirmationMessage1 : String = "Are you sure you want to delete your category named \"\(categoryName)\"?"
+//        let confirmationMessage2 : String = "Are you sure you want to delete your category with the name \"\(categoryName)\"?"
+//        let confirmationMessage3 : String = "Are you sure you want to delete your \(categoryName) category?"
+//        let confirmationMessage4 : String = "Are you sure you want to delete \(categoryName)?"
+//        let confirmationMessage5 : String = "Are you sure you want to delete \(categoryName)? This action cannot be undone."
+//        let confirmationMessage6 : String = "Are you sure you want to proceed? This action cannot be undone."
+        let confirmationMessage6 : String = "This action cannot be undone. Are you sure you want to proceed?"
+
+        let alert = UIAlertController(title: "Delete \(categoryName)", message: confirmationMessage6, preferredStyle: .actionSheet)
         
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (deleteAction) in
             alert.dismiss(animated: true, completion: nil)
